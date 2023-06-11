@@ -4,6 +4,7 @@ import com.example.mobilele2023.domain.entity.Enums.CategoryEnum;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "models")
@@ -30,8 +31,14 @@ public class ModelEntity extends BaseEntity {
     @Column
     private LocalDateTime modified;
 
+
     @ManyToOne
+    @JoinColumn(name = "brand_id")
     private BrandEntity brand;
+
+    @OneToMany(mappedBy = "model", fetch = FetchType.EAGER)
+    private Set<OfferEntity> offers;
+
 
     public ModelEntity() {
     }
@@ -105,6 +112,15 @@ public class ModelEntity extends BaseEntity {
 
     public ModelEntity setBrand(BrandEntity brand) {
         this.brand = brand;
+        return this;
+    }
+
+    public Set<OfferEntity> getOffers() {
+        return offers;
+    }
+
+    public ModelEntity setOffers(Set<OfferEntity> offers) {
+        this.offers = offers;
         return this;
     }
 }

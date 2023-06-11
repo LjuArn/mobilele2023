@@ -1,11 +1,10 @@
 package com.example.mobilele2023.domain.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "brands")
@@ -17,6 +16,9 @@ public class BrandEntity extends BaseEntity {
     private LocalDateTime created;
     @Column
     private LocalDateTime modified;
+
+    @OneToMany(mappedBy = "brand", fetch = FetchType.EAGER)
+    private Set<ModelEntity> models;
 
     public BrandEntity() {
     }
@@ -47,9 +49,19 @@ public class BrandEntity extends BaseEntity {
         this.modified = modified;
         return this;
     }
+
+    public Set<ModelEntity> getModels() {
+        return models;
+    }
+
+    public BrandEntity setModels(Set<ModelEntity> models) {
+        this.models = models;
+        return this;
+    }
+
+
 }
-//· id – a uuid or number.
-//
+
 //· name – a name of brand.
 //
 //· created – a date and time.
