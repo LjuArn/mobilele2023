@@ -12,7 +12,7 @@ public class ModelEntity extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private CategoryEnum category;
 
