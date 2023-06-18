@@ -17,7 +17,7 @@ public class BrandEntity extends BaseEntity {
     @Column
     private LocalDateTime modified;
 
-    @OneToMany(mappedBy = "brand", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "brand", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<ModelEntity> models;
 
     public BrandEntity() {

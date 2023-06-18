@@ -28,7 +28,6 @@ public class BrandServiceImpl implements BrandService {
         }
         BrandEntity ford = new BrandEntity().setName("ford");
 
-
         ModelEntity fiesta = new ModelEntity();
         fiesta.setName("Fiesta")
                 .setImageUrl("https://bg.wikipedia.org/wiki/%D0%A4%D0%B0%D0%B9%D0%BB:2017_Ford_Fiesta_Zetec_Turbo_1.0_Front.jpg")
@@ -47,8 +46,27 @@ public class BrandServiceImpl implements BrandService {
         escord.setBrand(ford);
 
         brandRepository.save(ford);
-        modelRepository.save(fiesta);
-        modelRepository.save(escord);
+
+        BrandEntity toyota = new BrandEntity().setName("Toyota");
+        ModelEntity corolla = new ModelEntity();
+        corolla.setName("Corolla")
+                .setImageUrl("https://bg.wikipedia.org/wiki/%D0%A4%D0%B0%D0%B9%D0%BB:Toyota_Corolla_Limousine_Hybrid_Genf_2019_1Y7A5576.jpg")
+                .setStartYear(2018)
+                .setCategory(CategoryEnum.CAR);
+
+        ModelEntity yaris= new ModelEntity();
+        yaris.setName("Yaris")
+                .setImageUrl("https://bg.wikipedia.org/wiki/%D0%A4%D0%B0%D0%B9%D0%BB:2020_Toyota_Yaris_Design_HEV_CVT_1.5_Front.jpg")
+                .setStartYear(1999)
+                .setEndYear(2010)
+                .setCategory(CategoryEnum.CAR);
+
+        toyota.setModels(Set.of(corolla, yaris));
+        corolla.setBrand(toyota);
+        yaris.setBrand(toyota);
+
+        brandRepository.save(toyota);
+
     }
 }
 
