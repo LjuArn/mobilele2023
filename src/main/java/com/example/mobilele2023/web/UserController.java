@@ -2,7 +2,10 @@ package com.example.mobilele2023.web;
 
 import com.example.mobilele2023.domain.bindingModel.UserLoginBindingModel;
 import com.example.mobilele2023.domain.bindingModel.UserRegisterBindingModel;
+import com.example.mobilele2023.domain.serviceModel.UserServiceModel;
+import com.example.mobilele2023.service.UserService;
 import jakarta.validation.Valid;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,6 +19,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/users")
 public class UserController {
 
+    private final UserService userService;
+    private final ModelMapper modelMapper;
+
+    public UserController(UserService userService, ModelMapper modelMapper) {
+        this.userService = userService;
+        this.modelMapper = modelMapper;
+    }
+
 
     @GetMapping("/register")
     public String register() {
@@ -25,24 +36,42 @@ public class UserController {
 
 
     @ModelAttribute
-    public UserRegisterBindingModel userRegisterBindingModel(){
+    public UserRegisterBindingModel userRegisterBindingModel() {
         return new UserRegisterBindingModel();
     }
 
 
+    @PostMapping("/register")
+    public String registerConfirmPost(@Valid UserRegisterBindingModel userRegisterBindingModel,
+                                      BindingResult bindingResult,
+                                      RedirectAttributes redirectAttributes) {
 
+        if (bindingResult.hasErrors() ||
+                !userRegisterBindingModel.getPassword().equals(userRegisterBindingModel.getConfirmPassword())
+        ) {
+            redirectAttributes
+                    .addFlashAttribute("userRegisterBindingModel", userRegisterBindingModel);
+            redirectAttributes
+                    .addFlashAttribute("org.springframework.validation.BindingResult.userRegisterBindingModel",
+                            bindingResult);
+            return "redirect:auth-register";
+
+        }
+        userService.registerUser(modelMapper.map(userRegisterBindingModel, UserServiceModel.class));
+
+        return "redirect:login";
+    }
 
     //---------------------------------------------------------------------------------
 
 
     @GetMapping("/login")
     public String loginUser(Model model) {
-        if(!model.containsAttribute("userLoginBindingModel")){
+        if (!model.containsAttribute("userLoginBindingModel")) {
             model.addAttribute("userLoginBindingModel", new UserLoginBindingModel());
         }
         return "auth-login";
     }
-
 
 
     @PostMapping("/login")
@@ -59,7 +88,6 @@ public class UserController {
                             bindingResult);
             return "redirect:auth-login";
         }
-
 
 
         return "redirect:/";
